@@ -232,7 +232,11 @@ kfold.kfoldll <- function(log_lik_heldout)  {
 
 #' Extract hold-out individuals' parameters from K Fold
 #' @description Function to extract hold-out individual parameters aka parameters that have the same dim as number of observation
-#' @param dd
+#' @param list_of_stanfits a list of fits coming out from stan_kfold
+#' @param list_of_holdouts a list of holdout coming from repeate_kfold$holdout
+#' @param pars parameters
+#' @param ... additional params passed to the extract method
+#' @param holdout Default to TRUE. whether to extract the holdout part or keptin part.
 #' @return a list of array of extracted values
 #' @export
 extract_K_fold <- function(list_of_stanfits, list_of_holdouts, pars = NULL, ...,  holdout=TRUE){
@@ -247,7 +251,7 @@ extract_K_fold <- function(list_of_stanfits, list_of_holdouts, pars = NULL, ...,
     ll <- grep(paste0('^',pars,'\\[?'), dimnames(x)[[3]])
     x[,,ll]
   }
-  par_extract_list <- lapply(list_of_stanfits,FUN = rstan::extract, pars=pars, ...)
+  par_extract_list <- lapply(list_of_stanfits, FUN = FUN, pars=pars, ...)
   extract_pars <- names(par_extract_list[[1]])
   extract_holdout <- lapply(extract_pars, function(p) {
     extract_holdout_par <- array(NA, dim = c(dim(par_extract_list[[1]][[p]])[1] * Nrep * D, dim(par_extract_list[[1]][[p]])[-1]))
@@ -273,3 +277,27 @@ extract_K_fold <- function(list_of_stanfits, list_of_holdouts, pars = NULL, ...,
   })
   setNames(extract_holdout, extract_pars)
 }
+
+#' #xtract variables from a stanfit of KFold stanfit
+#' @description Function to extract variables from draws array
+#' @param x a draw array
+#' @param variables a vector of variables
+#' @param merge_chains merge all chains to one
+#' @return an array of 3 dimensions: iteration, chain, and variables if merge = FALSE or a matrix of 2 dimensions: draw and variable if merge = TRUE
+#' @return a draw matrix
+#' @export
+extract_variables <- function(x, variables, ..., merge_chains = FALSE){
+  match.vars <-
+    unlist(lapply(variables,
+                  function(v)
+                    grep(paste0('^', v, '\\[?'), dimnames(x)[[3]], value=TRUE)))
+  if (merge_chains) return({
+    m <- sapply(match.vars,
+                function(v) posterior::extract_variable(x, v, ...))
+    names(dimnames(m)) <- c('draw', 'variable')
+    m
+  })
+
+  x[,,match.vars]
+}
+

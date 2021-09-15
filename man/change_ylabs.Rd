@@ -2,9 +2,18 @@
 % Please edit documentation in R/mcmc_plot.R
 \name{change_ylabs}
 \alias{change_ylabs}
-\title{Change y tick marks of bayesplot}
+\title{Change y tick labels of bayesplot}
 \usage{
 change_ylabs(mcmc_plot, ..., labs = character(), top_down = TRUE)
+}
+\arguments{
+\item{mcmc_plot}{an plot returned by bayepslot mcmc_}
+
+\item{...}{tick labels to be changed to}
+
+\item{labs}{same as ... but accept a vector of character}
+
+\item{top_down}{default to TRUE which respects bayesplot's ordering, otherwise ggplot's ordering.}
 }
 \description{
 Misc. function to change y tick marks of bayesplot

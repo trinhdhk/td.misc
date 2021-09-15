@@ -33,9 +33,12 @@ mcmc_intervals_multi <-
     })
   )
 
-#' Change y tick marks of bayesplot
+#' Change y tick labels of bayesplot
 #' @description Misc. function to change y tick marks of bayesplot
-#' @param
+#' @param mcmc_plot an plot returned by bayepslot mcmc_
+#' @param ... tick labels to be changed to
+#' @param labs same as ... but accept a vector of character
+#' @param top_down default to TRUE which respects bayesplot's ordering, otherwise ggplot's ordering.
 #' @export
 change_ylabs <- function(mcmc_plot, ..., labs = character(), top_down = TRUE){
   labs <- c(..., labs)
@@ -44,3 +47,4 @@ change_ylabs <- function(mcmc_plot, ..., labs = character(), top_down = TRUE){
   mcmc_plot + ggplot2::scale_y_discrete(limits = if(top_down) rev(params) else params,
                                         labels = if(top_down) rev(labs) else labs)
 }
+

@@ -12,6 +12,17 @@ extract_K_fold(
   holdout = TRUE
 )
 }
+\arguments{
+\item{list_of_stanfits}{a list of fits coming out from stan_kfold}
+
+\item{list_of_holdouts}{a list of holdout coming from repeate_kfold$holdout}
+
+\item{pars}{parameters}
+
+\item{...}{additional params passed to the extract method}
+
+\item{holdout}{Default to TRUE. whether to extract the holdout part or keptin part.}
+}
 \value{
 a list of array of extracted values
 }

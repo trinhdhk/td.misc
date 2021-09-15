@@ -4,7 +4,7 @@
 \alias{kfold.kfoldll}
 \title{Computation of ELPD}
 \usage{
-kfold.kfoldll(log_lik_heldout)
+\method{kfold}{kfoldll}(log_lik_heldout)
 }
 \arguments{
 \item{log_lik_heldout}{come from extract_log_lik_K}
