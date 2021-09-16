@@ -2,7 +2,7 @@
 % Please edit documentation in R/reapeated_kfold.R
 \name{extract_variables}
 \alias{extract_variables}
-\title{#xtract variables from a stanfit of KFold stanfit}
+\title{Extract variables from a stanfit of KFold stanfit}
 \usage{
 extract_variables(x, variables, ..., merge_chains = FALSE)
 }

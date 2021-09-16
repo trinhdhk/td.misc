@@ -207,13 +207,14 @@ extract_log_lik_K <- function(list_of_stanfits, list_of_holdout, loglik_par = 'l
 #' @param log_lik_heldout come from extract_log_lik_K
 #' @return an object of class c("kfold", "loo"). See \link[loo]{kfold}
 #' @importFrom loo kfold
+#' @method kfold kfoldll
 #' @export
 kfold.kfoldll <- function(log_lik_heldout)  {
-  library(matrixStats)
+  # library(matrixStats)
   logColMeansExp <- function(x) {
     # should be more stable than log(colMeans(exp(x)))
     S <- nrow(x)
-    colLogSumExps(x, na.rm=TRUE) - log(S)
+    matrixStats::colLogSumExps(x, na.rm=TRUE) - log(S)
   }
   # See equation (20) of @VehtariEtAl2016
   pointwise <-  matrix(logColMeansExp(log_lik_heldout), ncol= 1)
@@ -278,7 +279,7 @@ extract_K_fold <- function(list_of_stanfits, list_of_holdouts, pars = NULL, ...,
   setNames(extract_holdout, extract_pars)
 }
 
-#' #xtract variables from a stanfit of KFold stanfit
+#' Extract variables from a stanfit of KFold stanfit
 #' @description Function to extract variables from draws array
 #' @param x a draw array
 #' @param variables a vector of variables

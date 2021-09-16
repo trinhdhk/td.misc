@@ -9,13 +9,18 @@ Authors@R:
 Description: Misc functions for doing convenient stuff.
 License: use_mit_license()
 Encoding: UTF-8
+Remotes:
+  oucru-biostats/C306
 Imports: 
   rlang,
   loo,
   posterior,
-  bayesplot
+  bayesplot,
+  matrixStats
 Depends:
-  ggplot2
+  ggplot2,
+  data.table,
+  dplyr
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
