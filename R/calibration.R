@@ -11,21 +11,22 @@
 #' @param theme theme function. default to theme_bw
 #' @return a ggplot
 #' @export
-binary_calibration <- function(pred, pred_rep = NULL, obs, title = NULL, method=c("loess","splines"), se = TRUE, hist = TRUE, hist.normalize = TRUE, ..., theme = ggplot2::theme_bw){
+binary_calibration <- function(pred, pred_rep = NULL, obs, title = NULL, method=c("loess","splines"), se = TRUE, hist = TRUE, hist.normalize = TRUE, yscale=.1,..., theme = ggplot2::theme_bw){
   require(ggplot2)
-  maincolor <- list(...)$maincolor %||% getOption('plot.maincolor', default = "#CD113B")
-  subcolor1 <- list(...)$subcolor1 %||% getOption('plot.subcolor1', default = "#111111")
-  subcolor2 <- list(...)$subcolor2 %||% getOption('plot.subcolor2', default = "#999999")
+  maincolor <- "#CD113B"
+  subcolor1 <- "#111111"
+  subcolor2 <- "#999999"
 
   method <- match.arg(method)
+
+  # browser()
   p <- ggplot(mapping=aes(x = pred))
   add_pred <- function(pr, line = FALSE){
     pr <- pr
     if (method == "loess"){
-      geom_smooth(aes(x = pr, y = as.numeric(obs)), color = subcolor1, fill = subcolor2, alpha=if (line) 1 else .5/length(pred_rep), size=line, se = !line, method = method,...)
+      geom_smooth(aes(x = pr, y = as.numeric(obs)), method = 'loess', color = subcolor1, fill = subcolor2, alpha=if (line) 1 else .5/length(pred_rep), size=line, se = !line,...)
     } else {
-      knots <- list(...)$knots %||% 3
-      stat_smooth(aes(x = pr, y = as.numeric(obs)), method="glm", formula=y~splines::ns(x,knots), color = subcolor1, fill = subcolor2, size=line, alpha=if (line) 1 else .6/length(pred_rep), se = !line, ...)
+      stat_smooth(aes(x = pr, y = as.numeric(obs)), method="glm", formula=as.logical(y)~splines::ns(qlogis(x), knots), method.args=list(family='binomial'), color = subcolor1, fill = subcolor2, size=line, alpha=if (line) 1 else .6/length(pred_rep), se = !line, ...)
     }
   }
 
@@ -34,11 +35,10 @@ binary_calibration <- function(pred, pred_rep = NULL, obs, title = NULL, method=
 
 
   if (method == "loess"){
-    p <- p + geom_smooth(aes( y = as.numeric(obs)), color=maincolor, fill = subcolor2, se = se, size=.9, alpha=.3, method = method, ...)
+    p <- p + geom_smooth(aes(y = as.numeric(obs)), method = 'loess', color=maincolor, fill = subcolor2, se = se, size=.9, alpha=.3, ...)
   }
   else {
-    knots <- list(...)$knots %||% 3
-    p <- p + stat_smooth(aes( y = as.numeric(obs)), fullrange = TRUE, method="glm", formula=y~splines::ns(x,knots), color = maincolor, fill = subcolor2, size=.9, alpha = .6/length(pred_rep), se = se,...)
+    p <- p + stat_smooth(aes(y = as.numeric(obs)), fullrange = TRUE, method="glm", formula=as.logical(y)~splines::ns(qlogis(x), knots), method.args=list(family='binomial'), color = maincolor, fill = subcolor2, size=.9, alpha = .3, se = se,...)
   }
   p <- p +
     geom_line(aes(y = pred), color = "#000000") +
@@ -48,11 +48,29 @@ binary_calibration <- function(pred, pred_rep = NULL, obs, title = NULL, method=
     ggtitle(title)
 
   if (hist){
-    p0 <-  thinhist_subplot.binary(x = pred, y = as.numeric(obs), normalize = hist.normalize, yscale = .1, plot = FALSE)
+    p0 <-  thinhist_subplot.binary(x = pred, y = as.numeric(obs), normalize = hist.normalize, yscale = yscale, plot = FALSE)
     p <- p + p0[[1]] + p0[[2]]
   }
 
-  p + theme()
+  # Find average calibration
+  obs_p <- sum(obs)/length(obs)
+  pred_p <- mean(pred)
+
+  # Find minimum calibration
+  # browser()
+  pred.logit <- qlogis(pred)
+  calib.fit <- glm(as.logical(obs)~pred.logit, family='binomial')
+
+  p +
+    ggplot2::annotate(
+      "text", x = .99, y = .05, hjust='right', vjust='bottom',
+      label = paste0("Observed prevalence: ", format(obs_p, digits = 2), '\n',
+                     'Predicted prevalence: ', format(pred_p, digits=2), '\n',
+                     "Calibration intercept: ", format(coef(calib.fit)[['(Intercept)']], digits = 2),'\n',
+                     'Calibration slope: ', format(coef(calib.fit)[['pred.logit']], digits=2)),
+      parse = F, size = 2.8, colour = classifierplots:::fontgrey_str
+    ) +
+    theme()
 }
 
 # Thin histogram
@@ -77,7 +95,7 @@ thinhist_subplot.binary <- function(x, y, normalize = TRUE, digits = 2, yscale =
   sup = ceiling(max(x*round_factor))/round_factor
   breaks = seq(sub, sup, 10^-digits)
   x.breaks = hist(x, breaks, plot = FALSE)
-  normalize.factor <- if (normalize) quantile(x.breaks$count, .9, na.rm=TRUE) else NULL
+  normalize.factor <- if (normalize) quantile(x.breaks$count, .95, na.rm=TRUE) else NULL
   p <-
     list(
       thinhist_subplot(x[y==0], normalize.factor=normalize.factor, digits = digits, yscale = yscale, zero_y=0, plot=FALSE),

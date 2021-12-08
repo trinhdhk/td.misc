@@ -29,7 +29,8 @@ mcmc_intervals_multi <-
       ggplot(est_dat, aes(y=parameter, color=Model)) +
         geom_linerange(aes(xmin=ll, xmax=hh), position=position_dodge(width=w)) +
         geom_linerange(aes(xmin=l, xmax=h), size=1, position=position_dodge(width=w)) +
-        geom_point(aes(x=m), size=1.2, position=position_dodge(width=w))
+        geom_point(aes(x=m), size=1.2, position=position_dodge(width=w)) +
+        xlab('Estimation') + ylab('Parameter')
     })
   )
 
