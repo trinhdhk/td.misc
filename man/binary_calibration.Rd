@@ -13,6 +13,7 @@ binary_calibration(
   se = TRUE,
   hist = TRUE,
   hist.normalize = TRUE,
+  yscale = 0.1,
   ...,
   theme = ggplot2::theme_bw
 )
