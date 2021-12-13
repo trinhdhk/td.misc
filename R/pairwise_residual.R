@@ -25,13 +25,13 @@ pairwise_corr_plot <-
     }
     n.test <- ncol(obs)
     pair.matrix <- com.matrix(rbind(seq_len(n.test), seq_len(n.test)))
-    pair.matrix <- subset(pair.matrix, (pair.matrix[,1]<pair.matrix[,2]))
+    pair.matrix <- subset(pair.matrix, pair.matrix[,1]!=pair.matrix[,2])
     # browser()
     pred.sample <- do.call(
       rbind,
       apply(pred, 1,
             function(x)
-              sapply(x, function(y) rbinom(1000,1,y)),
+              sapply(x, function(y) rbinom(100,1,y)),
             simplify = FALSE))
 
     corr_obs <- corr_pred <- list()
