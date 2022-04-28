@@ -13,6 +13,7 @@ mcmc_intervals_multi <-
       formals(bayesplot::mcmc_intervals)[-1]
       ),
     body = quote({
+      requireNamespace('ggplot2')
       w <- .15 * length(fits)
 
       if (!length(names(fits))){
