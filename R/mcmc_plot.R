@@ -56,7 +56,7 @@ mcmc_intervals_multi <-
       if (multi_point_est){
         for (j in seq_along(point_est)[-1]){
           plt <- plt +
-            geom_point(aes(x=.data[[paste0('m',j)]]), size=point_size, shape=point_shape[j], weight=.5, fill='white', position=position_dodge(width=w))
+            geom_point(aes(x=.data[[paste0('m',j)]]), size=point_size, shape=point_shape[j], stroke=.5, fill='white', position=position_dodge(width=w))
         }
       }
 
