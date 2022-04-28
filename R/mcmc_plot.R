@@ -49,13 +49,13 @@ mcmc_intervals_multi <-
       plt <- ggplot(est_dat, aes(y=parameter, color=Model)) +
         geom_linerange(aes(xmin=ll, xmax=hh), position=position_dodge(width=w)) +
         geom_linerange(aes(xmin=l, xmax=h), size=1, position=position_dodge(width=w)) +
-        geom_point(aes(x=m), size=point_size, shape=1, position=position_dodge(width=w)) +
+        geom_point(aes(x=m), size=point_size, shape=21, position=position_dodge(width=w)) +
         xlab('Estimate') + ylab('Parameter')
 
       if (multi_point_est){
         for (j in seq_along(point_est)[-1]){
           plt <- plt +
-            geom_point(aes(x=.data[[paste0('m',j)]]), size=point_size, shape=j, position=position_dodge(width=w))
+            geom_point(aes(x=.data[[paste0('m',j)]]), size=point_size, shape=21+j, position=position_dodge(width=w))
         }
       }
 
