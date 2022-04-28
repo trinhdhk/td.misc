@@ -50,7 +50,7 @@ mcmc_intervals_multi <-
       plt <- ggplot(est_dat, aes(y=parameter, color=Model, fill=Model)) +
         geom_linerange(aes(xmin=ll, xmax=hh), position=position_dodge(width=w)) +
         geom_linerange(aes(xmin=l, xmax=h), size=1, position=position_dodge(width=w)) +
-        geom_point(aes(x=m), size=point_size, shape=point_shape[1], position=position_dodge(width=w)) +
+        geom_point(aes(x=m), size=point_size, shape=point_shape[1], color=grey(.1), position=position_dodge(width=w)) +
         xlab('Estimate') + ylab('Parameter')
 
       if (multi_point_est){
