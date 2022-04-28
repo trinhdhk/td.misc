@@ -1,4 +1,5 @@
 #' Function to create a side by side mcmc intervals
+#' @import ggplot2
 #' @description This function is similar to \code{bayesplot::mcmc_intervals} but
 #' provides support for pooling several intervals from several fits.
 #' @param fits a list of stan fits, must be wrapped in \code{list()}
