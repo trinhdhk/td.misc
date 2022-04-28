@@ -12,6 +12,7 @@ Encoding: UTF-8
 Remotes:
   oucru-biostats/C306
 Imports: 
+  ggplot2,
   rlang,
   loo,
   posterior,
