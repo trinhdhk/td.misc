@@ -46,7 +46,7 @@ mcmc_intervals_multi <-
                        dt
                      }, simplify=FALSE, USE.NAMES = TRUE)
       est_dat <- dplyr::bind_rows(est) |> dplyr::mutate(Model = factor(Model, levels = names(fits)))
-      plt <- ggplot(est_dat, aes(y=parameter, color=Model)) +
+      plt <- ggplot(est_dat, aes(y=parameter, color=Model, fill=Model)) +
         geom_linerange(aes(xmin=ll, xmax=hh), position=position_dodge(width=w)) +
         geom_linerange(aes(xmin=l, xmax=h), size=1, position=position_dodge(width=w)) +
         geom_point(aes(x=m), size=point_size, shape=21, position=position_dodge(width=w)) +
