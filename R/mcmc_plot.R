@@ -47,16 +47,16 @@ mcmc_intervals_multi <-
                      }, simplify=FALSE, USE.NAMES = TRUE)
       est_dat <- dplyr::bind_rows(est) |> dplyr::mutate(Model = factor(Model, levels = names(fits)))
       point_shape = c(21, 3, 4)
-      plt <- ggplot(est_dat, aes(y=parameter, color=Model, fill=Model)) +
+      plt <- ggplot(est_dat, aes(y=parameter, color=Model)) +
         geom_linerange(aes(xmin=ll, xmax=hh), position=position_dodge(width=w)) +
         geom_linerange(aes(xmin=l, xmax=h), size=1, position=position_dodge(width=w)) +
-        geom_point(aes(x=m), size=point_size, shape=point_shape[1], color=grey(.1), position=position_dodge(width=w)) +
+        geom_point(aes(x=m), size=point_size, shape=point_shape[1], fill='white', position=position_dodge(width=w)) +
         xlab('Estimate') + ylab('Parameter')
 
       if (multi_point_est){
         for (j in seq_along(point_est)[-1]){
           plt <- plt +
-            geom_point(aes(x=.data[[paste0('m',j)]]), size=point_size, shape=point_shape[j], color=grey(.1), position=position_dodge(width=w))
+            geom_point(aes(x=.data[[paste0('m',j)]]), size=point_size, shape=point_shape[j], fill='white', position=position_dodge(width=w))
         }
       }
 
