@@ -4,7 +4,7 @@
 #' provides support for pooling several intervals from several fits.
 #' @param fits a list of stan fits, must be wrapped in \code{list()}
 #' @param ... other params passed to \code{bayesplot::mcmc_intervals_data}
-#' @param multi_point_est default to FALSE, whether to set show multiple point est, if TRUE, must specify which point_est you want to plot
+#' @param multi_point_est default to FALSE, whether to set show multiple point est, which are mean and median
 #' @export
 mcmc_intervals_multi <-
   rlang::new_function(
@@ -46,15 +46,17 @@ mcmc_intervals_multi <-
                        dt
                      }, simplify=FALSE, USE.NAMES = TRUE)
       est_dat <- dplyr::bind_rows(est) |> dplyr::mutate(Model = factor(Model, levels = names(fits)))
+      point_shape = c(21, 3, 4)
       plt <- ggplot(est_dat, aes(y=parameter, color=Model, fill=Model)) +
         geom_linerange(aes(xmin=ll, xmax=hh), position=position_dodge(width=w)) +
         geom_linerange(aes(xmin=l, xmax=h), size=1, position=position_dodge(width=w)) +
-        geom_point(aes(x=m), size=point_size, shape=21, position=position_dodge(width=w)) +
+        geom_point(aes(x=m), size=point_size, shape=point_shape[1], position=position_dodge(width=w)) +
         xlab('Estimate') + ylab('Parameter')
+
       if (multi_point_est){
         for (j in seq_along(point_est)[-1]){
           plt <- plt +
-            geom_point(aes(x=.data[[paste0('m',j)]]), size=point_size, shape=21+j, color=grey(.1), position=position_dodge(width=w))
+            geom_point(aes(x=.data[[paste0('m',j)]]), size=point_size, shape=point_shape[j], color=grey(.1), position=position_dodge(width=w))
         }
       }
 
