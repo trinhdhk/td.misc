@@ -13,11 +13,11 @@ mcmc_intervals_multi <-
       formals(bayesplot::mcmc_intervals)[-1]
       ),
     body = quote({
-      require(ggplot2)
+      # require(ggplot2)
       w <- .15 * length(fits)
 
       if (!length(names(fits))){
-        names(fits) <- seq_along(x)
+        names(fits) <- seq_along(fits)
       }
 
       plot_call <- sys.call()
