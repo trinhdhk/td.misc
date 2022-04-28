@@ -26,7 +26,7 @@ mcmc_intervals_multi <-
       else plot_call[['fits']] <- NULL
       plot_call[names(plot_call)=='multi_point_est'] <- NULL
       if (!'point_est' %in% names(plot_call)) multi_point_est <- FALSE
-      point_est <- if (multi_point_est) unique(point_est) else NULL
+      point_est <- if (multi_point_est) c('mean', 'median')
       est  <- sapply(seq_along(fits),
                      \(i) {
                        this_call <- plot_call
