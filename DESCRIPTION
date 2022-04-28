@@ -1,6 +1,6 @@
 Package: td.misc
 Title: TrinhDHK's misc functions
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R: 
     person(given = "Trinh",
            family = "Dong",

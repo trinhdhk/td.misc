@@ -6,6 +6,7 @@
 \usage{
 mcmc_intervals_multi(
   fits = list(),
+  multi_point_est = FALSE,
   pars = character(),
   regex_pars = character(),
   transformations = list(),
@@ -21,6 +22,8 @@ mcmc_intervals_multi(
 }
 \arguments{
 \item{fits}{a list of stan fits, must be wrapped in \code{list()}}
+
+\item{multi_point_est}{default to FALSE, whether to set show multiple point est, if TRUE, must specify which point_est you want to plot}
 
 \item{...}{other params passed to \code{bayesplot::mcmc_intervals_data}}
 }
