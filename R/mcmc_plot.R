@@ -24,7 +24,7 @@ mcmc_intervals_multi <-
       plot_call[[1]] <- quote(bayesplot::mcmc_intervals_data)
       if (!'fits' %in% names(plot_call)) plot_call[[2]] <- NULL
       else plot_call[['fits']] <- NULL
-      plot_call[[names(plot_call)=='multi_point_est']] <- NULL
+      plot_call[names(plot_call)=='multi_point_est'] <- NULL
       if (!'point_est' %in% names(plot_call)) multi_point_est <- FALSE
       point_est <- if (multi_point_est) unique(point_est) else NULL
       est  <- sapply(seq_along(fits),
